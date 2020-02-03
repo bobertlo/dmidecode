@@ -29,16 +29,32 @@
  *    http://h18000.www1.hp.com/support/techpubs/technical_reference_guides/113a1097.html
  */
 
+#ifdef __DJGPP__
+#include <crt0.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#ifndef __DJGPP__
 #include <getopt.h>
+#else
+#include "getopt.h"
+#endif
 
 #include "version.h"
 #include "config.h"
 #include "types.h"
 #include "util.h"
+
+/* reduce code size */
+#ifdef __DJGPP__
+#define UNUSED __attribute__((unused))
+char **__crt0_glob_function (char *arg UNUSED) { return 0; }
+void   __crt0_load_environment_file (char *progname UNUSED) { }
+/* void   __crt0_setup_arguments (void) { } */
+#endif
 
 /* Options are global */
 struct opt

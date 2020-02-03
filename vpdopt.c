@@ -22,7 +22,11 @@
 #include <stdio.h>
 #include <strings.h>
 #include <stdlib.h>
+#ifndef __DJGPP__
 #include <getopt.h>
+#else
+#include "getopt.h"
+#endif
 
 #include "config.h"
 #include "util.h"

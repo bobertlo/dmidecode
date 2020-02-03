@@ -105,7 +105,7 @@ void *read_file(off_t base, size_t *max_len, const char *filename)
 	 * Don't print error message on missing file, as we will try to read
 	 * files that may or may not be present.
 	 */
-	if ((fd = open(filename, O_RDONLY)) == -1)
+	if ((fd = open(filename, O_RDONLY | O_BINARY)) == -1)
 	{
 		if (errno != ENOENT)
 			perror(filename);
@@ -169,7 +169,7 @@ void *mem_chunk(off_t base, size_t len, const char *devmem)
 	void *mmp;
 #endif
 
-	if ((fd = open(devmem, O_RDONLY)) == -1)
+	if ((fd = open(devmem, O_RDONLY | O_BINARY)) == -1)
 	{
 		perror(devmem);
 		return NULL;

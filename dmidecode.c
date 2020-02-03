@@ -60,12 +60,21 @@
  *    https://www.dmtf.org/sites/default/files/DSP0270_1.0.1.pdf
  */
 
+#ifdef __DJGPP__
+#include <crt0.h>
+#endif
+
 #include <stdio.h>
 #include <string.h>
 #include <strings.h>
 #include <stdlib.h>
 #include <unistd.h>
+#ifndef __DJGPP__
 #include <arpa/inet.h>
+#else /* #ifndef __DJGPP__ */
+#define AF_INET		 2
+#define AF_INET6	10
+#endif /* #ifndef __DJGPP__ */
 
 #ifdef __FreeBSD__
 #include <errno.h>
@@ -79,6 +88,14 @@
 #include "dmidecode.h"
 #include "dmiopt.h"
 #include "dmioem.h"
+
+/* reduce code size */
+#ifdef __DJGPP__
+#define UNUSED __attribute__((unused))
+char **__crt0_glob_function (char *arg UNUSED) { return 0; }
+void   __crt0_load_environment_file (char *progname UNUSED) { }
+/* void   __crt0_setup_arguments (void) { } */
+#endif
 
 #define out_of_spec "<OUT OF SPEC>"
 static const char *bad_index = "<BAD INDEX>";

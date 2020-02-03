@@ -1,0 +1,67 @@
+About
+=====
+
+This archive contains `dmidecode' version 3.2 source code configured for
+out-of-the-box building for the 32-bit DOS target using the DJGPP development
+system version 2.05.
+Build process has been tested on Windows XP Professional x86 SP3 only.
+
+Cheers,
+Robert Riebisch
+<rr@bttr-software.de>
+
+Build instructions
+==================
+
+1) Grab the following DJGPP packages from <http://www.delorie.com/djgpp/>:
+    * current/v2/djdev205.zip
+    * current/v2/djtzn205.zip
+    * current/v2gnu/bnu2311b.zip
+    * current/v2gnu/dif36b.zip
+    * current/v2gnu/gcc820b.zip
+    * current/v2gnu/mak421b.zip
+    * current/v2gnu/pat275br2.zip
+   `dif36b.zip' is only required for creating a new patch.
+   `pat275br2.zip' is only needed to reverse my source code changes.
+2) Install according to DJGPP's `readme.1st', i.e., all binaries must be
+   accessible via the `PATH' environment variable.
+3) Change to folder `dmidecode-N.N'.
+4) Run `make'.
+
+Now you can find `biosdecode.exe', `dmidecode.exe', `ownership.exe', and
+`vpddecode.exe' in folder `dmidecode-N.N'.
+
+Smaller binaries
+================
+
+At your option:
+1) Get UPX version 3.95 from <https://upx.github.io/>.
+2) Run `upx --best --lzma --all-filters *.exe'.
+
+If you need even smaller binaries, then restart the build process using the
+following DJGPP packages:
+ * deleted/beta/v2/djdev204.zip
+ * deleted/beta/v2/djtzn204.zip
+ * deleted/beta/v2gnu/bnu2231b.zip
+ * deleted/beta/v2gnu/dif32br3.zip
+ * deleted/beta/v2gnu/mak381b.zip
+ * deleted/beta/v2gnu/pat261b.zip
+ * deleted/v2gnu/gcc2953b.zip
+`dif32br3.zip' is only required for creating a new patch.
+`pat261b.zip' is only needed to reverse my source code changes.
+
+Source code changes
+===================
+
+If you wish to return to the original source code for some reason, you can
+remove my changes by running `patch -R -p0 --binary < dmidecode-N.N.diff' from
+the top-level directory.
+
+To reapply run `patch -p0 -T --binary < dmidecode-N.N.diff'.
+
+Files `getopt.c', `getopt.h', `getopt1.c', and `gettext.h' have been taken from
+<http://ftp.gnu.org/gnu/make/make-3.81.tar.gz>.
+
+File `inet_ntop.c' has been taken from
+<https://ftp.isc.org/isc/bind9/9.12.3/bind-9.12.3.tar.gz>. You can easily find
+my changes by looking for "#ifndef __DJGPP__".

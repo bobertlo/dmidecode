@@ -42,18 +42,7 @@ INSTALL_DIR     := $(INSTALL) -m 755 -d
 INSTALL_PROGRAM := $(INSTALL) -m 755
 RM              := rm -f
 
-# BSD make provides $MACHINE, but GNU make doesn't
-MACHINE ?= $(shell uname -m 2>/dev/null)
-
-# These programs are only useful on x86
-PROGRAMS-i386 := biosdecode ownership vpddecode
-PROGRAMS-i486 := $(PROGRAMS-i386)
-PROGRAMS-i586 := $(PROGRAMS-i386)
-PROGRAMS-i686 := $(PROGRAMS-i386)
-PROGRAMS-x86_64 := biosdecode ownership vpddecode
-PROGRAMS-amd64 := $(PROGRAMS-x86_64)
-
-PROGRAMS := dmidecode $(PROGRAMS-$(MACHINE))
+PROGRAMS := dmidecode biosdecode ownership vpddecode
 
 all : $(PROGRAMS)
 
@@ -61,17 +50,17 @@ all : $(PROGRAMS)
 # Programs
 #
 
-dmidecode : dmidecode.o dmiopt.o dmioem.o util.o
-	$(CC) $(LDFLAGS) dmidecode.o dmiopt.o dmioem.o util.o -o $@
+dmidecode : dmidecode.o dmiopt.o dmioem.o util.o mem_fsx.o getopt.o getopt1.o inet_ntop.o
+	$(CC) $(LDFLAGS) dmidecode.o dmiopt.o dmioem.o util.o mem_fsx.o getopt.o getopt1.o inet_ntop.o -o $@
 
-biosdecode : biosdecode.o util.o
-	$(CC) $(LDFLAGS) biosdecode.o util.o -o $@
+biosdecode : biosdecode.o util.o mem_fsx.o getopt.o getopt1.o
+	$(CC) $(LDFLAGS) biosdecode.o util.o mem_fsx.o getopt.o getopt1.o -o $@
 
-ownership : ownership.o util.o
-	$(CC) $(LDFLAGS) ownership.o util.o -o $@
+ownership : ownership.o util.o mem_fsx.o getopt.o getopt1.o
+	$(CC) $(LDFLAGS) ownership.o util.o mem_fsx.o getopt.o getopt1.o -o $@
 
-vpddecode : vpddecode.o vpdopt.o util.o
-	$(CC) $(LDFLAGS) vpddecode.o vpdopt.o util.o -o $@
+vpddecode : vpddecode.o vpdopt.o util.o mem_fsx.o getopt.o getopt1.o
+	$(CC) $(LDFLAGS) vpddecode.o vpdopt.o util.o mem_fsx.o getopt.o getopt1.o -o $@
 
 #
 # Objects
@@ -100,6 +89,18 @@ vpdopt.o : vpdopt.c config.h util.h vpdopt.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 util.o : util.c types.h util.h config.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+mem_fsx.o : mem_fsx.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+getopt.o : getopt.c getopt.h gettext.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+getopt1.o : getopt1.c getopt.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+inet_ntop.o: inet_ntop.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 #
